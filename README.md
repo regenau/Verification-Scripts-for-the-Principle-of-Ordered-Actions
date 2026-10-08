@@ -1,89 +1,82 @@
-Two Tiers of Irreversibility in Minimal Granular Assemblies
+# gateway-number
 
-Companion code for:
+[![tests](https://github.com/OWNER/gateway-number/actions/workflows/tests.yml/badge.svg)](https://github.com/OWNER/gateway-number/actions/workflows/tests.yml)
 
-Nicot F. & Regenauer-Lieb K. (2026) "The Principle of Ordered Action: Contact Topology, Phase-Space Expansion, and the Arrow of Time in Granular Matter" Proc. R. Soc. A
+Reference implementation of the catalysis Gateway number $G$ and its verification report, companion code for
 
-What this demonstrates
+> *Quantum spin regulates the catalytic cycle beyond binding energy* (submitted to *The Journal of Chemical Physics*).
 
-Two distinct sources of irreversibility operate in loaded granular assemblies. At a single scale they act independently; across scales they are connected through the Mori–Zwanzig projection (see Part II).
+Archive: https://doi.org/10.5281/zenodo.21440491
 
-	Tier 1: L-channel (configurational)	Tier 2: D-channel (frictional)
-Governed by	Skew-symmetric Onsager block L	Symmetric relaxation block D
-Mechanism	Energy frozen in contact fabric by irrecoverable normal rotations	Energy dissipated to the atomic lattice by grain sliding
-Parity dependence	Odd N: Gateway open. Even N: generically closed, but non-generic configurations can harbour Gateway channels through odd-parity sub-structure (Part II)	Always present when μ > 0
-Friction dependence	None (survives μ → 0)	Vanishes with μ → 0
-Cross-scale connection	The L-coupling at a finer level manufactures D at the coarser level through the memory kernel (Part II, transfer relation)	Manufactured from L below; postulated at a single scale in this script
+The Gateway number is the basis-invariant weight of non-dissipative circulation $\mathcal{L}$ (antisymmetric) relative to dissipation $\mathcal{D}$ (symmetric), formed from the relaxation operator $(\mathcal{D}+\mathcal{L})g$ with $g$ the positive-definite local metric:
 
-The Parity Theorem discriminates Tier 1 at a given level: a skew-symmetric matrix of odd dimension necessarily has a zero eigenvalue (the Gateway mode), while even dimension generically does not. The word "generically" matters: the grokking experiments of the companion series measure rank(L) = 2 at N = 6 (even), a non-generic configuration with a four-dimensional null space, demonstrating that even levels can carry Gateway channels.
+$$G=\sqrt{-\operatorname{Tr}\big((\mathcal{L}g)^2\big)\,/\,\operatorname{Tr}\big((\mathcal{D}g)^2\big)}.$$
 
-Quick start
-bash
-python four_grain_poa.py
+## What the code reproduces
 
-Outputs:
+Running the module prints a deterministic report that reproduces every number quoted in the Supplemental Material:
 
-four_grain_two_tier.pdf — publication-quality 12-panel figure (Figure 6 of the paper)
-four_grain_two_tier.png — rasterised copy at 150 dpi
-Console diagnostics: eigenvalues, energy budgets, parity sweep table
-Requirements
-Package	Minimum version
-Python	3.8
-NumPy	1.20
-SciPy	1.7
-Matplotlib	3.4
+| Report block | Supplemental Material | Content |
+|---|---|---|
+| S1X | Sec. S1 | two-coordinate spectrum, two-coordinate critical Gateway number, response-slope extraction, reversed-magnetisation pairing, symmetric-triad threshold |
+| S6A | Sec. S6 | closed form against the trace invariant, spectrum of $\mathcal{L}g$, basis invariance |
+| S6B | Sec. S6 | the illustrative normalised operator and its $G$ |
+| S6C | Sec. S6 | dimensional scaling illustration $\gamma\sim\zeta_{\mathrm{SOC}}/\Delta_{\mathrm{cf}}$ |
 
-Install with:
+`expected_output.txt` is the reference report. All checks use closed-form linear algebra; no finite differences. Random checks use fixed seeds.
 
-bash
-pip install numpy scipy matplotlib
-What the script computes
+## Requirements and installation
 
-Contact mechanics on 3-grain (triangle, N = 3) and 4-grain (square, N = 4) assemblies: forward affine compression, symmetry-breaking perturbation, contact classification into invariant and configurational sets, exact inverse affine reversal, non-return residual measurement. The reverse step uses an exact inverse transform (dividing by 1 − ε) rather than the approximate inverse (multiplying by 1 + ε), eliminating the O(ε²) kinematic artefact and ensuring the measured residual is purely topological.
+Python 3.9 or later and NumPy 1.17 or later. Continuous integration runs the test suite on Python 3.9 to 3.13.
 
-Two-channel energy budget over a closed loading cycle: configurational energy (L-channel, topological) and frictional energy (D-channel, dissipative), with and without friction. The frictional channel caps the tangential force at the Coulomb limit.
+The module is a single file and runs without installation. To install from a clone, with the command-line entry point:
 
-Coupling matrices for the VMC (N = 3) and VMCE (N = 4) thermodynamic coupling chains, with a frequency commensurability sweep that selects an integer fast-to-slow ratio for clean phase portraits.
+```
+git clone https://github.com/OWNER/gateway-number.git
+cd gateway-number
+pip install .
+```
 
-Phase-space integration using DOP853 (8th-order Dormand–Prince) at tolerances 10⁻¹¹, for pure L and L + D dynamics over 12 slow cycles. The dissipation matrices D are postulated at this single-scale level; Part II derives them from L through the Mori–Zwanzig projection.
+## Usage
 
-Parity sweep from N = 1 to 7, verifying det(L) = 0 at every odd N and det(L) ≠ 0 at every even N for the generic tridiagonal chain.
+```
+python gateway_number.py           # verification report; exit status 0 when every check passes
+python gateway_number.py --json    # machine-readable results
+gateway-number                     # same, after installation
+```
 
-The 12-panel figure
-Row	Left	Centre	Right
-1	(a) Grain geometry	(b) N=4 eigenvalue spectrum	(c) N=3 spectrum with Gateway
-2	(d) N=3 pure L: drift along v₀	(e) N=4 pure L: bounded	(f) Two-tier schematic
-3	(g) N=3 L+D: drift + saturation	(h) N=4 L+D: decay	(i) Energy bar chart
-4	(j) |det(L)| vs N	(k) min|λ| vs N	(l) Summary table
-Relation to Part II
+As a library:
 
-This script demonstrates the two-tier structure at a single scale. Part II of the PoA series extends the framework to multiple scales using the Mori–Zwanzig projection formalism. Three points of contact:
+```python
+import numpy as np
+import gateway_number as gn
 
-The dissipation matrices D used here are postulated. Part II shows they are manufactured from L at the finer level through the memory kernel: Dₙ₊₁ = Lₙʳᵉ Tₙ (Lₙʳᵉ)ᵀ, where Tₙ is the correlation-time matrix of the eliminated sector.
-The even-N Gateway closure demonstrated here is the generic case. Part II introduces the random-forest construction on the Hasse lattice, showing how non-generic even levels can harbour active inverse-cascade channels through their odd-parity sub-structure.
-The null-mode drift along v₀ measured in panel (d) is the single-scale manifestation of Gateway inheritance: Proposition 2 of Part II proves that the null direction of L at level n is annihilated by the induced D at level n+1, so it survives every subsequent coarse-graining.
-Repository structure
-poa-granular-irreversibility/
-├── LICENSE                    BSD-3-Clause
-├── README.md                  This file
-├── four_grain_poa.py          Main script (single file, ~840 lines)
-├── CITATION.cff               Machine-readable citation metadata
-├── setup_github.sh            Git init / GitHub push helper
-└── .gitignore
-Citing this work
+D = gn.assemble_D(D_CC=1.0, D_EE=1.0, D_SS=1.0, D_CE=0.3)   # channel order C, E, S
+L = gn.assemble_L(L_SC=0.2, L_SE=0.15)
+G = gn.gateway_number(D, L, g=np.eye(3))                      # 0.19826...
+```
 
-If you use this code, please cite:
+Main functions: `gateway_number`, `circulation_rate`, `closed_form_G`, `relaxation_eigenvalues`, `transform`, `entropy_normed`, `susceptibility`, `gateway_from_response_slope`, `two_coordinate_spectrum`, `two_coordinate_Gcrit`, `triad_Gcrit` and `pairing_estimate`. `gateway_number` and `circulation_rate` accept operators of any dimension, and every function checks its inputs: square, finite, matching shapes, symmetric $\mathcal{D}$, antisymmetric $\mathcal{L}$, positive-definite $g$ and non-vanishing dissipation. A violation raises `ValueError`.
 
-bibtex
-@article{Nicot_Regenauer-Lieb_2026,
-  author  = {Nicot, Fran\c{c}ois and Regenauer-Lieb, Klaus},
-  title   = {The Principle of Ordered Action: Contact Topology,
-             Phase-Space Expansion, and the Arrow of Time
-             in Granular Matter},
-  journal = {Proc. R. Soc. A},
-  year    = {2026},
-  note    = {Submitted 3 July 2026}
-}
-License
+## Conventions
 
-BSD-3-Clause. See LICENSE.
+* Triad channel order: C (chemical), E (electric), S (spin). `assemble_L(L_SC, L_SE)` places $L_{SC}$, $L_{SE}$ in the spin row and their negatives in the spin column.
+* Coordinate change $x\mapsto Px$: $\mathcal{D}\mapsto P\mathcal{D}P^{\top}$, $\mathcal{L}\mapsto P\mathcal{L}P^{\top}$, $g\mapsto P^{-\top}gP^{-1}$.
+* Response: perturbations vary as $e^{-i\omega t}$ and $\delta x=\chi h$, so $\chi^{-1}=g-i\omega\mathcal{A}^{-1}$. `gateway_from_response_slope` inverts the normalised slope before forming $G$, which is valid in any dimension; for two coordinates the slope itself gives $G$.
+* `pairing_estimate(A_plus, A_minus, i, j)` returns the antisymmetric coefficient, even in the reference magnetisation, and the paired symmetric average, which vanishes for an exact calculation and measures the numerical error.
+
+## Tests
+
+```
+python -m pytest            # or: python -m unittest
+```
+
+The suite pins the Sec. S6 numbers, checks basis invariance in dimensions 2 to 6, the two-coordinate theory, the triad threshold limits, the pairing, input validation and the command line.
+
+## Scope
+
+The S6 operator entries are illustrative normalised values, and the Fe line of S6C is a dimensional scaling illustration, not a computed operator and not a prediction. The value of $G$ for a real site requires the reactive prefactor, the dissipative coefficients and the entropy-metric normalisation, which the companion open-system electronic-response calculation (in preparation) is designed to supply.
+
+## Citation
+
+Cite the article above and this archive.

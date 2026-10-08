@@ -1,0 +1,45 @@
+========================================================================
+S1X  TWO-COORDINATE THEORY AND TRIAD THRESHOLD  (exact, Sec. S1)
+========================================================================
+  spectrum lambda_+- vs eigenvalues        max |diff| = 7.7e-14
+  complex spectrum <=> G > G_crit          mismatches = 0 / 2000
+  inversion identity G[A~^-1] = G[A~]      max |diff| = 3.6e-15
+  response chi^-1 = g - i w A^-1           max |diff| = 8.8e-14
+  triad G_crit: cubic discriminant at kappa_c   max |scaled| = 1.7e-15
+  triad: G[A^-1] differs from G[A] in 100% of 2000 random Gateway triads
+  +-M pairing recovers L_ES, eps_sym = 0   max |diff| = 2.2e-16
+
+========================================================================
+S6A  MATHEMATICAL VERIFICATION  (exact)
+========================================================================
+  closed form vs trace invariant : 0.1982628964  vs  0.1982628964   (|diff| = 0.0e+00)
+  spectrum of L g                : +0.000+0.000i, +0.000+0.250i, +0.000-0.250i   (kappa = 0.25000)
+  basis invariance   det(P) = -0.5630
+    Original    G = 0.19826
+    Transformed G = 0.19826        (|diff| = 1.5e-15)
+    (bare Frobenius ratio, by contrast: 0.19826 -> 0.07582: NOT invariant)
+
+========================================================================
+S6B  ILLUSTRATIVE IMPLEMENTATION  (illustrative normalised operator)
+========================================================================
+  D = [[1.0,0.3,0],[0.3,1.0,0],[0,0,1.0]]
+  L = skew(L_SC=0.2, L_SE=0.15)    (L_CE = 0 by parity)
+  g = I
+  --> Gateway number  G = 0.19826   (illustrative; not a specific catalyst)
+
+========================================================================
+S6C  PHYSICAL SCALING  (dimensional scaling illustration, NOT a computed G)
+========================================================================
+  L_SC = gamma * dm/dmu,  L_SE = gamma * dm/dphi   (dm/dmu=0.80, dm/dphi=0.60)
+   gamma      G          note
+    0.00   0.00000
+    0.02   0.01586
+    0.05   0.03965  <- 3d Fe scale (zeta/Delta ~ 1e-1)
+    0.10   0.07931  <- 3d Fe scale (zeta/Delta ~ 1e-1)
+    0.20   0.15861
+    0.25   0.19826  == S6B operator
+
+  G is exactly linear in gamma, and G(0)=0 (pure dissipation).
+  For a 3d Fe site, zeta_SOC/Delta_cf ~ 1e-1, so G ~ 1e-2 .. 1e-1:
+  a dimensional scaling illustration only, not a prediction for a specific catalyst.
+========================================================================
