@@ -1,6 +1,6 @@
 # gateway-number
 
-[![tests](https://github.com/OWNER/gateway-number/actions/workflows/tests.yml/badge.svg)](https://github.com/OWNER/gateway-number/actions/workflows/tests.yml)
+[![tests](https://github.com/regenau/gateway-number/actions/workflows/tests.yml/badge.svg)](https://github.com/regenau/gateway-number/actions/workflows/tests.yml)
 
 Reference implementation of the catalysis Gateway number $G$ and its verification report, companion code for
 
@@ -32,7 +32,7 @@ Python 3.9 or later and NumPy 1.17 or later. Continuous integration runs the tes
 The module is a single file and runs without installation. To install from a clone, with the command-line entry point:
 
 ```
-git clone https://github.com/OWNER/gateway-number.git
+git clone https://github.com/regenau/gateway-number.git
 cd gateway-number
 pip install .
 ```
